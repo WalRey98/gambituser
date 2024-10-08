@@ -1,6 +1,8 @@
 package bd
 
 import (
+	_ "github.com/go-sql-driver/mysql"
+
 	"database/sql"
 	"fmt"
 	"os"
@@ -43,7 +45,7 @@ func ConnStr(claves models.SecretRDSJson) string {
 	authToken = claves.Password
 	dbEndpoint = claves.Host
 	dbName = "gambit"
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?allowCleartextPasswords=true", dbUser, authToken, dbEndpoint, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?", dbUser, authToken, dbEndpoint, dbName)
 	fmt.Println(dsn)
 	return dsn
 }
