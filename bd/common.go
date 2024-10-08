@@ -49,7 +49,6 @@ func ConnStr(claves models.SecretRDSJson) string {
 	dbEndpoint := claves.Host
 	dbName := "gambit"
 
-	// Construcción segura de la cadena de conexión
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, authToken, dbEndpoint, dbName)
 	fmt.Println("Cadena de conexión: ", dsn)
 	return dsn
