@@ -20,16 +20,25 @@ func SignUp(sig models.SignUp) error {
 
 	defer Db.Close()
 
-	// Inserción usando una consulta preparada para evitar SQL Injection
-	sentencia := "INSERT INTO users (User_Email, User_UUID, User_DateAdd) VALUES (?, ?, ?)"
-	fmt.Println("Sentencia preparada: ", sentencia)
+	// Verificamos que los valores esten correctos
+	fmt.Println("UserEmail:", sig.UserEmail)
+	fmt.Println("UserUUID", sig.UserUUID)
 
-	_, err = Db.Exec(sentencia, sig.UserEmail, sig.UserUUID, tools.FechaMySQL())
+	// Preparamos la consulta con valores dinámicos
+	stmt, err := Db.Prepare("INSERT INTO users (User_Email, User_UUID, User_DateAdd) VALUES (?, ?, ?)")
 	if err != nil {
-		fmt.Printf("Error al ejecutar sentencia SQL: %v\n", err)
+		fmt.Println("Error al preparar la consulta:", err)
+		return err
+	}
+	defer stmt.Close() // Cerramos el statement al final
+
+	// Ejecutamos la inserción
+	_, err = stmt.Exec(sig.UserEmail, sig.UserUUID, tools.FechaMySQL())
+	if err != nil {
+		fmt.Println("Error al ejecutar la inserción:", err)
 		return err
 	}
 
-	fmt.Println("SignUp > Ejecución exitosa")
+	fmt.Println("SingUp > Ejecución Exitosa")
 	return nil
 }
